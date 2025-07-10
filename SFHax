@@ -10,31 +10,7 @@ end
 wait(1.5)
 Notify()
 
-RunService.Stepped:Connect(function()
-	local hrp = player.Character:FindFirstChild("HumanoidRootPart")
-
-	for _, v in pairs(Players:GetPlayers()) do
-		if v.Name ~= player.Name then
-			pcall(function()
-
-				local vhrp = v.Character:FindFirstChild("HumanoidRootPart")
-
-				local Radius = 30
-				local Distance = (vhrp.Position - hrp.Position).Magnitude
-				if Distance <= Radius then
-
-					local tool = player.Character:FindFirstChildOfClass("Tool")
-
-					if tool and tool:FindFirstChild("Handle") then
-						tool:Activate()
-					end
-				end
-			end)
-		end
-	end
-end)
-
-while RunService.Stepped:Wait() do
+function tank()
 	for i, Character in next, workspace:GetChildren() do
 		if player.Character == Character then continue end
 
@@ -68,17 +44,40 @@ while RunService.Stepped:Wait() do
 	end
 end
 
-_G.Hitbox = 5.5
-_G.Disabled = true
+function LungeBot()
+	local hrp = player.Character:FindFirstChild("HumanoidRootPart")
 
-local Players = game:GetService("Players")
-RunService.RenderStepped:connect(function()
+	for _, v in pairs(Players:GetPlayers()) do
+		if v.Name ~= player.Name then
+			pcall(function()
+
+				local vhrp = v.Character:FindFirstChild("HumanoidRootPart")
+
+				local Radius = 30
+				local Distance = (vhrp.Position - hrp.Position).Magnitude
+				if Distance <= Radius then
+
+					local tool = player.Character:FindFirstChildOfClass("Tool")
+
+					if tool and tool:FindFirstChild("Handle") then
+						tool:Activate()
+					end
+				end
+			end)
+		end
+	end
+end
+
+function hitbox()
+	_G.Hitbox = 5.5
+	_G.Disabled = true
+
 	if _G.Disabled then
 		for _, v in pairs(Players:GetPlayers()) do
 			if v.Name ~= player.Name then
 				pcall(function()
 					v.Character.HumanoidRootPart.Size = Vector3.new(_G.Hitbox,_G.Hitbox,_G.Hitbox)
-					v.Character.HumanoidRootPart.Transparency = 0.7
+					v.Character.HumanoidRootPart.Transparency = 1
 					v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Black")
 					v.Character.HumanoidRootPart.Material = "Neon"
 					v.Character.HumanoidRootPart.CanCollide = false
@@ -86,4 +85,13 @@ RunService.RenderStepped:connect(function()
 			end
 		end
 	end
+end
+
+RunService.Stepped:Connect(function()
+	hitbox()
+	LungeBot()
 end)
+
+while RunService.Stepped:Wait() do
+	tank()
+end
