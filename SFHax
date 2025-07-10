@@ -7,6 +7,7 @@ local function Notify()
 	StarterGui:SetCore("SendNotification", {Title = "BetterSFing", Text = "Loaded"})
 end
 
+wait(1.5)
 Notify()
 
 RunService.Stepped:Connect(function()
@@ -83,6 +84,7 @@ RunService.Stepped:Connect(function()
 				if Distance <= Radius then
 					vhrp.Size = Vector3.new(SizeRadius, SizeRadius, SizeRadius)
 					vhrp.CanCollide = false
+					vhrp.Transprency = 0.5
 
 				else
 					vhrp.Size = Vector3.new(2, 2, 1)
