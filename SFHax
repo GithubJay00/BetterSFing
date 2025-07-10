@@ -1,0 +1,94 @@
+local StarterGui = game:GetService("StarterGui")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+local function Notify()
+	StarterGui:SetCore("SendNotification", {Title = "BetterSFing", Text = "Loaded"})
+end
+
+Notify()
+
+RunService.Stepped:Connect(function()
+	local hrp = player.Character:FindFirstChild("HumanoidRootPart")
+
+	for _, v in pairs(Players:GetPlayers()) do
+		if v.Name ~= player.Name then
+			pcall(function()
+
+				local vhrp = v.Character:FindFirstChild("HumanoidRootPart")
+
+				local Radius = 30
+				local Distance = (vhrp.Position - hrp.Position).Magnitude
+				if Distance <= Radius then
+
+					local tool = player.Character:FindFirstChildOfClass("Tool")
+
+					if tool and tool:FindFirstChild("Handle") then
+						tool:Activate()
+					end
+				end
+			end)
+		end
+	end
+end)
+
+while RunService.Stepped:Wait() do
+	for i, Character in next, workspace:GetChildren() do
+		if player.Character == Character then continue end
+
+		if Character:IsA("Model") and Character:FindFirstChildOfClass("Humanoid") then
+			task.spawn(function()
+				RunService.Stepped:Wait()
+
+				local Humanoid = Character:FindFirstChildOfClass("Humanoid") 
+
+				local RightArm = Character and Character:FindFirstChild("Right Arm")
+				local RightGrip = RightArm and RightArm:FindFirstChild("RightGrip")
+
+				local Health = Humanoid and Humanoid.Health
+				local Tool = RightGrip and RightGrip.Part1 and RightGrip.Part1.Parent
+
+				if (RightArm.Position - player.Character.Torso.Position).Magnitude < 7 and Tool and Health < 101 and RightArm.Transparency < 0.5 then
+					local Player = Players:FindFirstChild(Character.Name)
+
+					Tool.Parent = Player.Backpack
+					RightGrip.Parent = nil
+
+					RunService.RenderStepped:Wait()
+
+					if Tool.Parent then
+						Tool.Parent = Character
+						RightGrip.Parent = RightArm 
+					end
+				end
+			end) 
+		end
+	end
+end
+
+RunService.Stepped:Connect(function()
+	local hrp = player.Character:FindFirstChild("HumanoidRootPart")
+
+	for _, v in pairs(Players:GetPlayers()) do
+		if v.Name ~= player.Name then
+			--pcall(function()
+
+				local vhrp = v.Character:FindFirstChild("HumanoidRootPart")
+
+				local Radius = 10
+				local SizeRadius = 5.5
+
+				local Distance = (vhrp.Position - hrp.Position).Magnitude
+				if Distance <= Radius then
+					vhrp.Size = Vector3.new(SizeRadius, SizeRadius, SizeRadius)
+					vhrp.CanCollide = false
+
+				else
+					vhrp.Size = Vector3.new(2, 2, 1)
+					vhrp.CanCollide = false
+				end
+			--end)
+		end
+	end
+end)
