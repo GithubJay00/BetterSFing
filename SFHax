@@ -68,29 +68,22 @@ while RunService.Stepped:Wait() do
 	end
 end
 
-RunService.Stepped:Connect(function()
-	local hrp = player.Character:FindFirstChild("HumanoidRootPart")
+_G.Hitbox = 5.5
+_G.Disabled = true
 
-	for _, v in pairs(Players:GetPlayers()) do
-		if v.Name ~= player.Name then
-			--pcall(function()
-
-				local vhrp = v.Character:FindFirstChild("HumanoidRootPart")
-
-				local Radius = 10
-				local SizeRadius = 5.5
-
-				local Distance = (vhrp.Position - hrp.Position).Magnitude
-				if Distance <= Radius then
-					vhrp.Size = Vector3.new(SizeRadius, SizeRadius, SizeRadius)
-					vhrp.CanCollide = false
-					vhrp.Transprency = 0.5
-
-				else
-					vhrp.Size = Vector3.new(2, 2, 1)
-					vhrp.CanCollide = false
-				end
-			--end)
+local Players = game:GetService("Players")
+RunService.RenderStepped:connect(function()
+	if _G.Disabled then
+		for _, v in pairs(Players:GetPlayers()) do
+			if v.Name ~= player.Name then
+				pcall(function()
+					v.Character.HumanoidRootPart.Size = Vector3.new(_G.Hitbox,_G.Hitbox,_G.Hitbox)
+					v.Character.HumanoidRootPart.Transparency = 0.7
+					v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Black")
+					v.Character.HumanoidRootPart.Material = "Neon"
+					v.Character.HumanoidRootPart.CanCollide = false
+				end)
+			end
 		end
 	end
 end)
